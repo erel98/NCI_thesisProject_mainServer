@@ -85,7 +85,6 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
             # If this is the main server, sync checkpoint to the backup server
             if current_region == "eu-west-1" and SIMULATION_SCENARIO == "combined":
                 subprocess.run(["bash", "./dataReplication.sh"])
-                print('done')
             await manager.send_data(json.dumps(data), client_id)
             resetCheckpointJson()
         
