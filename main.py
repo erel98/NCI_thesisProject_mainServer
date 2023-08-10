@@ -47,7 +47,9 @@ async def websocket_endpoint(websocket: WebSocket, client_id: str):
     try:
         data = await websocket.receive_text()
         data = int(data)
-        
+        # If there is no checkpoint, set before to now
+        if before == "":
+            before = datetime.now()
         # Compute-heavy task
         for i in range(start_index, data):
             checkpoint_value = i
@@ -104,10 +106,6 @@ def readCheckpointDataFromJson():
     latest_value = checkpoint_data["latestValue"]
     before = checkpoint_data["latestTime"]
     
-    if before:
-       before = datetime.strptime(before, "%Y-%m-%d %H:%M:%S")
-    else:
-        before = datetime.now()
     return {"latestValue":latest_value, "before":before}
 
 def writeToCheckpointJson(data_to_write: dict):
